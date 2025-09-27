@@ -13,10 +13,11 @@ public class QuizServiceImpl implements QuizService {
 
     private QuizRepository quizRepository;
 
-//    private QuestionClient questionClient;
+    private QuestionClient questionClient;
 
-    public QuizServiceImpl(QuizRepository quizRepository) {
+    public QuizServiceImpl(QuizRepository quizRepository, QuestionClient questionClient) {
         this.quizRepository = quizRepository;
+        this.questionClient = questionClient;
     }
 
     @Override
@@ -26,27 +27,22 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<Quiz> get() {
-        return quizRepository.findAll();
-//        List<Quiz> quizzes = quizRepository.findAll();
+        List<Quiz> quizzes = quizRepository.findAll();
 
-//        List<Quiz> newQuizList = quizzes.stream().map(quiz -> {
-//            quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
-//            return quiz;
-//        }).collect(Collectors.toList());
-//
-//        return newQuizList;
+        List<Quiz> newQuizList = quizzes.stream().map(quiz -> {
+            quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
+            return quiz;
+        }).collect(Collectors.toList());
+
+        return newQuizList;
     }
 
     @Override
     public Quiz get(Long id) {
-        return quizRepository.findById(id)
-                .orElseThrow(
-                        ()-> new RuntimeException("Quiz is not there")
-                );
 
-//        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found"));
-//        quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
-//        return quiz;
+        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found"));
+        quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
+        return quiz;
     }
 }
 
