@@ -17,7 +17,6 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
 
-    @Column(unique = true, nullable = false)
     private String question;
     private Long quizId;
 }
